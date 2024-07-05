@@ -132,41 +132,6 @@ func (c *CustomerOrder) updateCurrentOrder(db *sql.DB) error {
 }
 
 // UpdateOrInsertCurrentOrder updates or inserts a customer order in the database.
-func (c *CustomerOrder) UpdateCustOrdItems_CoPilotVersion(update OrderItems) error {
-	// Create a map to track existing MenuIndications by ItemMenuNum
-	existingMenuIndications := make(map[int]MenuIndication)
-	for _, existing := range c.OrderItems.MenuIndications {
-		existingMenuIndications[existing.ItemMenuNum] = existing
-	}
-
-	// Update existing MenuIndications with new values
-	for _, new := range update.MenuIndications {
-		if existing, ok := existingMenuIndications[new.ItemMenuNum]; ok {
-			// Update existing MenuIndication
-			existing.ItemAmount = new.ItemAmount
-			// Remove MenuIndication if ItemAmount is zero
-			if existing.ItemAmount == "0" {
-				delete(existingMenuIndications, new.ItemMenuNum)
-			}
-		} else {
-			// Add new MenuIndication
-			existingMenuIndications[new.ItemMenuNum] = new
-		}
-	}
-
-	// Convert the map back to a slice of MenuIndications
-	var updatedMenuIndications []MenuIndication
-	for _, v := range existingMenuIndications {
-		updatedMenuIndications = append(updatedMenuIndications, v)
-	}
-
-	// Update c.OrderItems with the updated MenuIndications
-	c.OrderItems.MenuIndications = updatedMenuIndications
-
-	return nil
-}
-
-// UpdateOrInsertCurrentOrder updates or inserts a customer order in the database.
 func (c *CustomerOrder) cleanOrderItems() error {
 	// Filter out items with ItemAmount equal to "0"
 	var filteredMenu []MenuIndication
@@ -198,6 +163,41 @@ func (c *CustomerOrder) UpdateCustOrdItems(update OrderItems) error {
 	}
 
 	c.cleanOrderItems()
+
+	return nil
+}
+
+// UpdateOrInsertCurrentOrder updates or inserts a customer order in the database.
+func (c *CustomerOrder) UpdateCustOrdItems_CoPilotVersion(update OrderItems) error {
+	// Create a map to track existing MenuIndications by ItemMenuNum
+	processed := make(map[int]MenuIndication)
+	for _, existing := range c.OrderItems.MenuIndications {
+		processed[existing.ItemMenuNum] = existing
+	}
+
+	// Update existing MenuIndications with new values
+	for _, new := range update.MenuIndications {
+		if existing, ok := processed[new.ItemMenuNum]; ok {
+			// Update existing MenuIndication
+			existing.ItemAmount = new.ItemAmount
+			// Remove MenuIndication if ItemAmount is zero
+			if existing.ItemAmount == "0" {
+				delete(processed, new.ItemMenuNum)
+			}
+		} else {
+			// Add new MenuIndication
+			processed[new.ItemMenuNum] = new
+		}
+	}
+
+	// Convert the map back to a slice of MenuIndications
+	var updatedMenuIndications []MenuIndication
+	for _, v := range processed {
+		updatedMenuIndications = append(updatedMenuIndications, v)
+	}
+
+	// Update c.OrderItems with the updated MenuIndications
+	c.OrderItems.MenuIndications = updatedMenuIndications
 
 	return nil
 }
