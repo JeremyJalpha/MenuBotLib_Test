@@ -132,35 +132,43 @@ func (c *CustomerOrder) updateCurrentOrder(db *sql.DB) error {
 }
 
 // UpdateOrInsertCurrentOrder updates or inserts a customer order in the database.
-func (c *CustomerOrder) UpdateCustOrdItems(update OrderItems) error {
-	// Create a map to track existing MenuIndications by ItemMenuNum
-	processed := make(map[int]MenuIndication)
-	for _, existing := range c.OrderItems.MenuIndications {
-		processed[existing.ItemMenuNum] = existing
+func (c *CustomerOrder) cleanOrderItems() error {
+	// Filter out items with ItemAmount equal to "0"
+	var filteredMenu []MenuIndication
+	for _, ordItm := range c.OrderItems.MenuIndications {
+		if ordItm.ItemAmount != "0" {
+			filteredMenu = append(filteredMenu, ordItm)
+		}
 	}
 
-	// Update existing MenuIndications with new values
-	for _, new := range update.MenuIndications {
-		if existing, ok := processed[new.ItemMenuNum]; ok {
-			// Update existing MenuIndication
-			existing.ItemAmount = new.ItemAmount
-			// Remove MenuIndication if ItemAmount is zero
-			if existing.ItemAmount == "0" {
-				delete(processed, new.ItemMenuNum)
+	// Update c.OrderItems.MenuIndications with the filtered slice
+	c.OrderItems.MenuIndications = filteredMenu
+
+	return nil
+}
+
+// UpdateOrInsertCurrentOrder updates or inserts a customer order in the database.
+func (c *CustomerOrder) UpdateCustOrdItems(update OrderItems) error {
+	// Initialize a map to track processed ItemMenuNum values
+	processed := make(map[int]bool)
+
+	for _, upd := range update.MenuIndications {
+		for i, ordItm := range c.OrderItems.MenuIndications {
+			if ordItm.ItemMenuNum == upd.ItemMenuNum {
+				c.OrderItems.MenuIndications[i] = upd // Overwrite existing ordItm with upd
+				// Mark this ItemMenuNum as processed
+				processed[ordItm.ItemMenuNum] = true
 			}
 		}
 	}
 
-	// Convert the map back to a slice of MenuIndications
-	var updatedMenuIndications []MenuIndication
-	for _, existing := range c.OrderItems.MenuIndications {
-		if updated, ok := processed[existing.ItemMenuNum]; ok {
-			updatedMenuIndications = append(updatedMenuIndications, updated)
+	for _, updn := range update.MenuIndications {
+		if !processed[updn.ItemMenuNum] {
+			c.OrderItems.MenuIndications = append(c.OrderItems.MenuIndications, updn)
 		}
 	}
 
-	// Update c.OrderItems with the updated MenuIndications
-	c.OrderItems.MenuIndications = updatedMenuIndications
+	c.cleanOrderItems()
 
 	return nil
 }
