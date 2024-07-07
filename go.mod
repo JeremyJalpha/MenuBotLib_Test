@@ -2,7 +2,7 @@ module github.com/JeremyJalpha/MenuBotLib_Test
 
 go 1.21.2
 
-require github.com/JeremyJalpha/MenuBotLib v0.0.0-20240704121625-21acef588b83
+require github.com/JeremyJalpha/MenuBotLib v0.0.0-20240707163354-35718e5863a0
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
