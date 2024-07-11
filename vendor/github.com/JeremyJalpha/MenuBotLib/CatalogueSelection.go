@@ -34,13 +34,13 @@ func SingleSelectionAsAString(section CatalogueSelection) string {
 }
 
 // Updated function to use the new CatalogueSection structure
-func AssembleCatalogueSelections(pricelistpreamble string, selections []CatalogueSelection) string {
+func AssembleCatalogueSelections(pricelistpreamble string, ctlgselections []CatalogueSelection) string {
 	selectionString := pricelistpreamble + "\n\n"
 
-	for i, selection := range selections {
+	for i, selection := range ctlgselections {
 		// Outdoor Selection
 		selectionString += SingleSelectionAsAString(selection)
-		if i < len(selections)-1 {
+		if i < len(ctlgselections)-1 {
 			selectionString += "\n"
 		}
 	}
