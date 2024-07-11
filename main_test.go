@@ -167,7 +167,7 @@ func Test_NewOrder_UpdateOrInsertCurrentOrder(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		err = test.custOrd.UpdateOrInsertCurrentOrder(db, test.custOrd.CellNumber, test.custOrd.CatalogueID, test.expected, true)
+		err = test.custOrd.UpdateOrInsertCurrentOrder(db, test.custOrd.CellNumber, test.expected, true)
 		assert.NoError(t, err)
 
 		var readOrderItems string
@@ -223,12 +223,14 @@ func Test_CheckoutNow(t *testing.T) {
 	}
 
 	tests := []struct {
-		userInfo    wb.UserInfo
-		custOrd     wb.CustomerOrder
-		expected    wb.OrderItems
-		expectError bool
+		ctlgSelections []wb.CatalogueSelection
+		userInfo       wb.UserInfo
+		custOrd        wb.CustomerOrder
+		expected       wb.OrderItems
+		expectError    bool
 	}{
 		{
+			ctlgSelections: []wb.CatalogueSelection{},
 			userInfo: wb.UserInfo{
 				CellNumber: senderNum,
 				NickName:   wb.NullString{NullString: sql.NullString{String: "testSplurge", Valid: true}},
@@ -258,7 +260,7 @@ func Test_CheckoutNow(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		wb.BeginCheckout(db, test.userInfo, test.custOrd, checkoutInfo, true)
+		wb.BeginCheckout(db, test.userInfo, test.ctlgSelections, test.custOrd, checkoutInfo, true)
 		assert.NoError(t, err)
 
 		// ...
