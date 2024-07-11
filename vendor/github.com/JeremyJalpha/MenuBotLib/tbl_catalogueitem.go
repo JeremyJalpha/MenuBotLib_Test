@@ -34,7 +34,7 @@ func GetCatalogueItemsFromDB(db *sql.DB, catalogueID string) ([]CatalogueItem, e
 	var items []CatalogueItem
 	for rows.Next() {
 		var item CatalogueItem
-		err := rows.Scan(&item.CatalogueItemID, &item.Item, &item.Options, &item.PricingType)
+		err := rows.Scan(&item.CatalogueItemID, &item.Selection, &item.Item, &item.Options, &item.PricingType)
 		if err != nil {
 			return nil, err
 		}
