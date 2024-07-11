@@ -15,8 +15,8 @@ const (
 
 type CatalogueItem struct {
 	CatalogueID     string
-	Selection       string
 	CatalogueItemID int
+	Selection       string
 	Item            string
 	Options         []string
 	PricingType     PricingType
@@ -24,7 +24,7 @@ type CatalogueItem struct {
 
 // GetCatalogueItemsFromDB retrieves catalogue items from the database based on catalogueID.
 func GetCatalogueItemsFromDB(db *sql.DB, catalogueID string) ([]CatalogueItem, error) {
-	queryString := `SELECT catalogueitemID, "item", "options", pricingType FROM catalogueitem WHERE catalogueID = $1`
+	queryString := `SELECT catalogueID, catalogueitemID, "selection", "item", "options", pricingType FROM catalogueitem WHERE catalogueID = $1`
 	rows, err := db.Query(queryString, catalogueID)
 	if err != nil {
 		return nil, err
