@@ -11,6 +11,7 @@ const (
 
 type CatalogueItem struct {
 	CatalogueID     string
+	Selection       string
 	CatalogueItemID int
 	Item            string
 	Options         []string
