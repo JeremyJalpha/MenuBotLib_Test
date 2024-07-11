@@ -6,12 +6,13 @@ import (
 )
 
 type ConversationContext struct {
-	UserInfo     UserInfo
-	UserExisted  bool
-	PriceList    []CatalogueSelection
-	CurrentOrder CustomerOrder
-	MessageBody  string
-	DBReadTime   time.Time
+	UserInfo      UserInfo
+	UserExisted   bool
+	PrlstPreamble string
+	PriceList     []CatalogueSelection
+	CurrentOrder  CustomerOrder
+	MessageBody   string
+	DBReadTime    time.Time
 }
 
 func NewConversationContext(db *sql.DB, senderNumber, messagebody string, pricelist []CatalogueSelection, isAutoInc bool) *ConversationContext {
