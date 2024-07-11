@@ -148,11 +148,11 @@ func parseQuestionCommand(match string, db *sql.DB, convo *ConversationContext, 
 	case "currentorder?":
 		return QuestionCommand{CommandData: CommandData{Name: "currentorder", Text: convo.CurrentOrder.GetCurrentOrderAsAString(db, convo.UserInfo.CellNumber, isAutoInc)}}
 	case "fr.prlist?":
-		return QuestionCommand{CommandData: CommandData{Name: "fr.prlist", Text: prclstPreamble + "\n\n" + AssembleCatalogueSelections(convo.PrlstPreamble, convo.PriceList)}}
+		return QuestionCommand{CommandData: CommandData{Name: "fr.prlist", Text: prclstPreamble + "\n\n" + AssembleCatalogueSelections(convo.Pricelist.PrlstPreamble, convo.Pricelist.Catalogue)}}
 	case "userinfo?":
 		return QuestionCommand{CommandData: CommandData{Name: "userinfo", Text: convo.UserInfo.GetUserInfoAsAString()}}
 	case "checkoutnow?":
-		return QuestionCommand{CommandData: CommandData{Name: "checkoutnow", Text: BeginCheckout(db, convo.UserInfo, convo.PriceList, convo.CurrentOrder, checkoutUrls, isAutoInc)}}
+		return QuestionCommand{CommandData: CommandData{Name: "checkoutnow", Text: BeginCheckout(db, convo.UserInfo, convo.Pricelist.Catalogue, convo.CurrentOrder, checkoutUrls, isAutoInc)}}
 	default:
 		return QuestionCommand{CommandData: CommandData{Name: "menu", Text: mainMenu}}
 	}
