@@ -17,32 +17,32 @@
 # Dependency directories (remove the comment below to include it)
 node_modules/
 
-vendor/
+#vendor/
 
-# vendor/filippo.io
-# vendor/go.mau.fi
-# vendor/golang.org
-# vendor/google.golang.org
-# vendor/gopkg.in
-# vendor/modernc.org
-# vendor/rsc.io
+vendor/filippo.io
+vendor/go.mau.fi
+vendor/golang.org
+vendor/google.golang.org
+vendor/gopkg.in
+vendor/modernc.org
+vendor/rsc.io
 
-# vendor/github.com/davecgh
-# vendor/github.com/dustin
-# vendor/github.com/febriliankr
-# vendor/github.com/go-chi
-# vendor/github.com/google
-# vendor/github.com/gorilla
-# vendor/github.com/hashicorp
-# vendor/github.com/joho
-# vendor/github.com/lib
-# vendor/github.com/mattn
-# vendor/github.com/mdp
-# vendor/github.com/ncruces
-# vendor/github.com/pmezard
-# vendor/github.com/remyoudompheng
-# vendor/github.com/rs
-# vendor/github.com/stretchr
+vendor/github.com/davecgh
+vendor/github.com/dustin
+vendor/github.com/febriliankr
+vendor/github.com/go-chi
+vendor/github.com/google
+vendor/github.com/gorilla
+vendor/github.com/hashicorp
+vendor/github.com/joho
+vendor/github.com/lib
+vendor/github.com/mattn
+vendor/github.com/mdp
+vendor/github.com/ncruces
+vendor/github.com/pmezard
+vendor/github.com/remyoudompheng
+vendor/github.com/rs
+vendor/github.com/stretchr
 
 # Go workspace file
 go.work
