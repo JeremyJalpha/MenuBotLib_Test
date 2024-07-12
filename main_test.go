@@ -6,29 +6,27 @@ import (
 	"reflect"
 	"testing"
 
-	wb "github.com/JeremyJalpha/MenuBotLib"
+	mb "github.com/JeremyJalpha/MenuBotLib"
 	"github.com/stretchr/testify/assert"
 	_ "modernc.org/sqlite"
 )
 
-const currentCatalogueID = "WeAreGettingThePig"
-
 func Test_ParseUpdateOrderCommand(t *testing.T) {
 	tests := []struct {
 		commandText string
-		expected    []wb.MenuIndication
+		expected    []mb.MenuIndication
 		expectError bool
 	}{
 		{
 			commandText: "update order 6:0",
-			expected: []wb.MenuIndication{
+			expected: []mb.MenuIndication{
 				{ItemMenuNum: 6, ItemAmount: "0"},
 			},
 			expectError: false,
 		},
 		{
 			commandText: "update order 9:12, 10: 1x3, 3x2, 2x1, 6:5",
-			expected: []wb.MenuIndication{
+			expected: []mb.MenuIndication{
 				{ItemMenuNum: 10, ItemAmount: "1x3, 3x2, 2x1"},
 				{ItemMenuNum: 9, ItemAmount: "12"},
 				{ItemMenuNum: 6, ItemAmount: "5"},
@@ -38,7 +36,7 @@ func Test_ParseUpdateOrderCommand(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result, err := wb.ParseUpdateOrderCommand(test.commandText)
+		result, err := mb.ParseUpdateOrderCommand(test.commandText)
 		if (err != nil) != test.expectError {
 			t.Errorf("ParseUpdateOrderCommand(%q) error = %v, expectError %v", test.commandText, err, test.expectError)
 			continue
@@ -49,47 +47,21 @@ func Test_ParseUpdateOrderCommand(t *testing.T) {
 	}
 }
 
-func setupTestDB() (*sql.DB, error) {
-	db, err := sql.Open("sqlite", ":memory:")
-	if err != nil {
-		return nil, err
-	}
-
-	createTable := `
-	CREATE TABLE customerorder (
-		orderID INTEGER PRIMARY KEY,
-		cellnumber TEXT NOT NULL,
-		catalogueID TEXT NOT NULL,
-		orderitems TEXT NOT NULL,
-		orderTotal INTEGER DEFAULT 0,
-		ispaid BOOLEAN DEFAULT 0,
-		datetimedelivered DATETIME,
-		isclosed BOOLEAN DEFAULT 0
-	);`
-
-	_, err = db.Exec(createTable)
-	if err != nil {
-		return nil, err
-	}
-
-	return db, nil
-}
-
 // func (c *CustomerOrder) updateCustOrdItems(update OrderItems) error {
 // baseline := "Update order 9:12, 10: 1x3, 3x2, 2x1, 6: 5"
 func Test_UpdateCustOrdItems(t *testing.T) {
 	var err error
 
 	tests := []struct {
-		given       wb.CustomerOrder
-		update      wb.OrderItems
-		expected    wb.OrderItems
+		given       mb.CustomerOrder
+		update      mb.OrderItems
+		expected    mb.OrderItems
 		expectError bool
 	}{
 		{
-			given: wb.CustomerOrder{
-				OrderItems: wb.OrderItems{
-					MenuIndications: []wb.MenuIndication{
+			given: mb.CustomerOrder{
+				OrderItems: mb.OrderItems{
+					MenuIndications: []mb.MenuIndication{
 						{ItemMenuNum: 10, ItemAmount: "1x3"},
 						{ItemMenuNum: 9, ItemAmount: "5"},
 						{ItemMenuNum: 8, ItemAmount: "6"},
@@ -98,15 +70,15 @@ func Test_UpdateCustOrdItems(t *testing.T) {
 					},
 				},
 			},
-			update: wb.OrderItems{
-				MenuIndications: []wb.MenuIndication{
+			update: mb.OrderItems{
+				MenuIndications: []mb.MenuIndication{
 					{ItemMenuNum: 10, ItemAmount: "1x3, 3x2, 2x1"},
 					{ItemMenuNum: 6, ItemAmount: "0"},
 					{ItemMenuNum: 7, ItemAmount: "7"},
 				},
 			},
-			expected: wb.OrderItems{
-				MenuIndications: []wb.MenuIndication{
+			expected: mb.OrderItems{
+				MenuIndications: []mb.MenuIndication{
 					{ItemMenuNum: 10, ItemAmount: "1x3, 3x2, 2x1"},
 					{ItemMenuNum: 9, ItemAmount: "5"},
 					{ItemMenuNum: 8, ItemAmount: "6"},
@@ -133,30 +105,30 @@ func Test_UpdateCustOrdItems(t *testing.T) {
 }
 
 func Test_NewOrder_UpdateOrInsertCurrentOrder(t *testing.T) {
-	db, err := setupTestDB()
+	db, err := setupTestCustOrderDB()
 	assert.NoError(t, err)
 	defer db.Close()
 
 	tests := []struct {
-		custOrd     wb.CustomerOrder
-		expected    wb.OrderItems
+		custOrd     mb.CustomerOrder
+		expected    mb.OrderItems
 		expectError bool
 	}{
 		{
-			custOrd: wb.CustomerOrder{
+			custOrd: mb.CustomerOrder{
 				OrderID:     12345,
 				CellNumber:  "0766140000",
-				CatalogueID: currentCatalogueID,
-				OrderItems: wb.OrderItems{
-					MenuIndications: []wb.MenuIndication{
+				CatalogueID: catalogueID,
+				OrderItems: mb.OrderItems{
+					MenuIndications: []mb.MenuIndication{
 						{ItemMenuNum: 10, ItemAmount: "1x3, 3x2, 2x1"},
 						{ItemMenuNum: 9, ItemAmount: "12"},
 						{ItemMenuNum: 6, ItemAmount: "5"},
 					},
 				},
 			},
-			expected: wb.OrderItems{
-				MenuIndications: []wb.MenuIndication{
+			expected: mb.OrderItems{
+				MenuIndications: []mb.MenuIndication{
 					{ItemMenuNum: 10, ItemAmount: "1x3, 3x2, 2x1"},
 					{ItemMenuNum: 9, ItemAmount: "12"},
 					{ItemMenuNum: 6, ItemAmount: "5"},
@@ -176,7 +148,7 @@ func Test_NewOrder_UpdateOrInsertCurrentOrder(t *testing.T) {
 		assert.NoError(t, err)
 
 		// Unmarshal the JSON string back to []OrderItem
-		var actual wb.OrderItems
+		var actual mb.OrderItems
 		err = json.Unmarshal([]byte(readOrderItems), &actual)
 		assert.NoError(t, err)
 
@@ -184,7 +156,7 @@ func Test_NewOrder_UpdateOrInsertCurrentOrder(t *testing.T) {
 			t.Errorf("UpdateOrInsertCurrentOrder(%q) error = %v, expectError %v", test.custOrd.OrderItems, err, test.expectError)
 			continue
 		}
-		result := wb.OrderItems{MenuIndications: actual.MenuIndications}
+		result := mb.OrderItems{MenuIndications: actual.MenuIndications}
 		if !reflect.DeepEqual(result, test.expected) {
 			t.Errorf("UpdateOrInsertCurrentOrder(%q) = %v, want %v", test.custOrd.OrderItems, result, test.expected)
 		}
@@ -192,7 +164,7 @@ func Test_NewOrder_UpdateOrInsertCurrentOrder(t *testing.T) {
 }
 
 func Test_CheckoutNow(t *testing.T) {
-	db, err := setupTestDB()
+	db, err := setupTestCustOrderDB()
 	assert.NoError(t, err)
 	defer db.Close()
 
@@ -211,7 +183,7 @@ func Test_CheckoutNow(t *testing.T) {
 	Passphrase := "*************"
 	PfHost := "https://sandbox.payfast.co.za/eng/process"
 
-	checkoutInfo := wb.CheckoutInfo{
+	checkoutInfo := mb.CheckoutInfo{
 		ReturnURL:      HomebaseURL + returnBaseURL,
 		CancelURL:      HomebaseURL + cancelBaseURL,
 		NotifyURL:      HomebaseURL + notifyBaseURL,
@@ -223,33 +195,33 @@ func Test_CheckoutNow(t *testing.T) {
 	}
 
 	tests := []struct {
-		ctlgSelections []wb.CatalogueSelection
-		userInfo       wb.UserInfo
-		custOrd        wb.CustomerOrder
-		expected       wb.OrderItems
+		ctlgSelections []mb.CatalogueSelection
+		userInfo       mb.UserInfo
+		custOrd        mb.CustomerOrder
+		expected       mb.OrderItems
 		expectError    bool
 	}{
 		{
-			ctlgSelections: []wb.CatalogueSelection{},
-			userInfo: wb.UserInfo{
+			ctlgSelections: []mb.CatalogueSelection{},
+			userInfo: mb.UserInfo{
 				CellNumber: senderNum,
-				NickName:   wb.NullString{NullString: sql.NullString{String: "testSplurge", Valid: true}},
-				Email:      wb.NullString{NullString: sql.NullString{String: "sbtu01@payfast.io", Valid: true}},
+				NickName:   mb.NullString{NullString: sql.NullString{String: "testSplurge", Valid: true}},
+				Email:      mb.NullString{NullString: sql.NullString{String: "sbtu01@payfast.io", Valid: true}},
 			},
-			custOrd: wb.CustomerOrder{
+			custOrd: mb.CustomerOrder{
 				OrderID:     12345,
 				CellNumber:  senderNum,
-				CatalogueID: currentCatalogueID,
-				OrderItems: wb.OrderItems{
-					MenuIndications: []wb.MenuIndication{
+				CatalogueID: catalogueID,
+				OrderItems: mb.OrderItems{
+					MenuIndications: []mb.MenuIndication{
 						{ItemMenuNum: 10, ItemAmount: "1x3, 3x2, 2x1"},
 						{ItemMenuNum: 9, ItemAmount: "12"},
 						{ItemMenuNum: 6, ItemAmount: "5"},
 					},
 				},
 			},
-			expected: wb.OrderItems{
-				MenuIndications: []wb.MenuIndication{
+			expected: mb.OrderItems{
+				MenuIndications: []mb.MenuIndication{
 					{ItemMenuNum: 10, ItemAmount: "1x3, 3x2, 2x1"},
 					{ItemMenuNum: 9, ItemAmount: "12"},
 					{ItemMenuNum: 6, ItemAmount: "5"},
@@ -260,7 +232,7 @@ func Test_CheckoutNow(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		wb.BeginCheckout(db, test.userInfo, test.ctlgSelections, test.custOrd, checkoutInfo, true)
+		mb.BeginCheckout(db, test.userInfo, test.ctlgSelections, test.custOrd, checkoutInfo, true)
 		assert.NoError(t, err)
 
 		// ...
