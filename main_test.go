@@ -206,6 +206,7 @@ func Test_CheckoutNow(t *testing.T) {
 		expectError    bool
 	}{
 		{
+			//Remember to change the static definitions to match your pricelist defenition.
 			ctlgSelections: selections,
 			userInfo: mb.UserInfo{
 				CellNumber: senderNum,
