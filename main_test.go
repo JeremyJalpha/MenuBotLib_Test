@@ -109,6 +109,9 @@ func Test_NewOrder_UpdateOrInsertCurrentOrder(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
+	_, err = db.Exec(crtCustomerOrderTbl)
+	assert.NoError(t, err)
+
 	tests := []struct {
 		custOrd     mb.CustomerOrder
 		expected    mb.OrderItems
@@ -168,9 +171,6 @@ func Test_CheckoutNow(t *testing.T) {
 	db, err := setupTestDBInstance()
 	assert.NoError(t, err)
 	defer db.Close()
-
-	_, err = db.Exec(crtCustomerOrderTbl)
-	assert.NoError(t, err)
 
 	_, err = db.Exec(crtCatalogueItemTbl)
 	assert.NoError(t, err)
