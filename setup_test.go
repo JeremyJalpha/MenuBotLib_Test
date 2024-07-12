@@ -90,7 +90,7 @@ var KitchenSelection = mb.CatalogueSelection{
 	Preamble: ktcnSlctnPreamble,
 	Items: []mb.CatalogueItem{
 		{
-			CatalogueItemID: 7,
+			CatalogueItemID: 4,
 			Item:            "DIY ready cake mix",
 			Options: []string{
 				"5g @ R180 p.g.",
@@ -99,7 +99,7 @@ var KitchenSelection = mb.CatalogueSelection{
 			PricingType: mb.WeightItem,
 		},
 		{
-			CatalogueItemID: 8,
+			CatalogueItemID: 5,
 			Item:            "Sugarless Sugar",
 			Options: []string{
 				"5g @ R210 p.g.",
@@ -108,7 +108,7 @@ var KitchenSelection = mb.CatalogueSelection{
 			PricingType: mb.WeightItem,
 		},
 		{
-			CatalogueItemID: 9,
+			CatalogueItemID: 6,
 			Item:            "Burnt bread crumbs",
 			Options: []string{
 				"5g @ R250 p.g.",
@@ -123,7 +123,7 @@ var DIYSelection = mb.CatalogueSelection{
 	Preamble: diySlctnPreamble,
 	Items: []mb.CatalogueItem{
 		{
-			CatalogueItemID: 10,
+			CatalogueItemID: 7,
 			Item:            "Bristleless Broom",
 			Options: []string{
 				"Vacuumless roomba version @ R650",
@@ -139,13 +139,13 @@ var TechSelection = mb.CatalogueSelection{
 	Preamble: tchSlctnPreamble,
 	Items: []mb.CatalogueItem{
 		{
-			CatalogueItemID: 11,
+			CatalogueItemID: 8,
 			Item:            "Macless Apple @ R100 each",
 			Options:         []string{},
 			PricingType:     mb.SingleItem,
 		},
 		{
-			CatalogueItemID: 12,
+			CatalogueItemID: 9,
 			Item:            "Unchargeable cellphone @ R150 each",
 			Options:         []string{},
 			PricingType:     mb.SingleItem,
@@ -157,7 +157,7 @@ var EdiblesSelection = mb.CatalogueSelection{
 	Preamble: edblsSlctnPreamble,
 	Items: []mb.CatalogueItem{
 		{
-			CatalogueItemID: 13,
+			CatalogueItemID: 10,
 			Item:            "Fruit toffees - 400mg",
 			Options: []string{
 				"10-Pack @ R200",
@@ -165,7 +165,7 @@ var EdiblesSelection = mb.CatalogueSelection{
 			PricingType: mb.SingleItem,
 		},
 		{
-			CatalogueItemID: 14,
+			CatalogueItemID: 11,
 			Item:            "Sour space strips - 400mg",
 			Options: []string{
 				"10-Pack @ R180",
@@ -173,7 +173,7 @@ var EdiblesSelection = mb.CatalogueSelection{
 			PricingType: mb.SingleItem,
 		},
 		{
-			CatalogueItemID: 15,
+			CatalogueItemID: 12,
 			Item:            "Space bud treats - 240mg",
 			Options: []string{
 				"3-Pack @ R200",
@@ -224,10 +224,16 @@ func queryAndPrintCatalogueItems(db *sql.DB) error {
 	fmt.Println("--------------------------------------------------")
 	for rows.Next() {
 		var item mb.CatalogueItem
-		err := rows.Scan(&item.CatalogueID, &item.CatalogueItemID, &item.Selection, &item.Item, &item.Options, &item.PricingType)
+		var optionsStr string // Temporary variable to hold the comma-separated options
+
+		err := rows.Scan(&item.CatalogueID, &item.CatalogueItemID, &item.Selection, &item.Item, &optionsStr, &item.PricingType)
 		if err != nil {
 			return err
 		}
+
+		// Split the options string into a slice of strings
+		item.Options = strings.Split(optionsStr, ", ")
+
 		fmt.Printf("Catalogue ID: %s, Item ID: %d, Selection: %s, Item: %s, Options: %v, Pricing Type: %s\n",
 			item.CatalogueID, item.CatalogueItemID, item.Selection, item.Item, item.Options, item.PricingType)
 		fmt.Println("--------------------------------------------------")
