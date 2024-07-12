@@ -209,39 +209,41 @@ func insertCatalogueItems(db *sql.DB, ctlgid string, selections []mb.CatalogueSe
 	return nil
 }
 
-func queryAndPrintCatalogueItems(db *sql.DB) error {
+func queryCatalogueItemsToString(db *sql.DB) (string, error) {
 	query := `
 	SELECT catalogueID, catalogueitemID, "selection", "item", "options", pricingType
 	FROM catalogueitem;`
 
 	rows, err := db.Query(query)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer rows.Close()
 
-	fmt.Println("Catalogue Items:")
-	fmt.Println("--------------------------------------------------")
+	var resultBuilder strings.Builder
+	resultBuilder.WriteString("Catalogue Items:\n")
+	resultBuilder.WriteString("--------------------------------------------------\n")
+
 	for rows.Next() {
 		var item mb.CatalogueItem
-		var optionsStr string // Temporary variable to hold the comma-separated options
+		var optionsStr string
 
 		err := rows.Scan(&item.CatalogueID, &item.CatalogueItemID, &item.Selection, &item.Item, &optionsStr, &item.PricingType)
 		if err != nil {
-			return err
+			return "", err
 		}
 
-		// Split the options string into a slice of strings
 		item.Options = strings.Split(optionsStr, ", ")
 
-		fmt.Printf("Catalogue ID: %s, Item ID: %d, Selection: %s, Item: %s, Options: %v, Pricing Type: %s\n",
-			item.CatalogueID, item.CatalogueItemID, item.Selection, item.Item, item.Options, item.PricingType)
-		fmt.Println("--------------------------------------------------")
+		// Build the formatted string
+		resultBuilder.WriteString(fmt.Sprintf("Catalogue ID: %s, Item ID: %d, Selection: %s, Item: %s, Options: %v, Pricing Type: %s\n",
+			item.CatalogueID, item.CatalogueItemID, item.Selection, item.Item, item.Options, item.PricingType))
+		resultBuilder.WriteString("--------------------------------------------------\n")
 	}
 
 	if err := rows.Err(); err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return resultBuilder.String(), nil
 }
