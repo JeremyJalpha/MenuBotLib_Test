@@ -2,6 +2,7 @@ package menubotlib
 
 import (
 	"database/sql"
+	"fmt"
 )
 
 // Define a custom type for PricingType
@@ -20,6 +21,18 @@ type CatalogueItem struct {
 	Item            string
 	Options         []string
 	PricingType     PricingType
+}
+
+// Generate a string for a single question and answer
+func (i *CatalogueItem) CatalogueItemAsAString() string {
+	optionsText := ""
+	for i, option := range i.Options {
+		optionsText += fmt.Sprintf("   %d. %s\n", i+1, option)
+	}
+
+	qA := fmt.Sprintf("%d: %s\n%s\n", i.CatalogueItemID, i.Item, optionsText)
+
+	return qA
 }
 
 // GetCatalogueItemsFromDB retrieves catalogue items from the database based on catalogueID.
