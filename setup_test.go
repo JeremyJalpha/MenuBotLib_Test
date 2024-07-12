@@ -208,3 +208,34 @@ func insertCatalogueItems(db *sql.DB, ctlgid string, selections []mb.CatalogueSe
 
 	return nil
 }
+
+func queryAndPrintCatalogueItems(db *sql.DB) error {
+	query := `
+	SELECT catalogueID, catalogueitemID, "selection", "item", "options", pricingType
+	FROM catalogueitem;`
+
+	rows, err := db.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	fmt.Println("Catalogue Items:")
+	fmt.Println("--------------------------------------------------")
+	for rows.Next() {
+		var item mb.CatalogueItem
+		err := rows.Scan(&item.CatalogueID, &item.CatalogueItemID, &item.Selection, &item.Item, &item.Options, &item.PricingType)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("Catalogue ID: %s, Item ID: %d, Selection: %s, Item: %s, Options: %v, Pricing Type: %s\n",
+			item.CatalogueID, item.CatalogueItemID, item.Selection, item.Item, item.Options, item.PricingType)
+		fmt.Println("--------------------------------------------------")
+	}
+
+	if err := rows.Err(); err != nil {
+		return err
+	}
+
+	return nil
+}
