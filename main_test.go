@@ -105,7 +105,7 @@ func Test_UpdateCustOrdItems(t *testing.T) {
 }
 
 func Test_NewOrder_UpdateOrInsertCurrentOrder(t *testing.T) {
-	db, err := setupTestCustOrderDB()
+	db, err := setupTestDBInstance()
 	assert.NoError(t, err)
 	defer db.Close()
 
@@ -176,7 +176,7 @@ func Test_CheckoutNow(t *testing.T) {
 	// 	log.Fatal(err)
 	// }
 
-	db, err := setupTestCustOrderDB()
+	db, err := setupTestDBInstance()
 	assert.NoError(t, err)
 	defer db.Close()
 

@@ -19,15 +19,8 @@ const (
 	diySlctnPreamble   = "DIY:"
 	tchSlctnPreamble   = "Tech:"
 	edblsSlctnPreamble = "Edibles:"
-)
 
-func setupTestCustOrderDB() (*sql.DB, error) {
-	db, err := sql.Open("sqlite", ":memory:")
-	if err != nil {
-		return nil, err
-	}
-
-	createTable := `
+	crtCustomerOrderTbl = `
 	CREATE TABLE customerorder (
 		orderID INTEGER PRIMARY KEY,
 		cellnumber TEXT NOT NULL,
@@ -39,29 +32,7 @@ func setupTestCustOrderDB() (*sql.DB, error) {
 		isclosed BOOLEAN DEFAULT 0
 	);`
 
-	_, err = db.Exec(createTable)
-	if err != nil {
-		return nil, err
-	}
-
-	return db, nil
-}
-
-func addTableToDBContext(db *sql.DB, createTableSQL string) error {
-	_, err := db.Exec(createTableSQL)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func setupTestCatalogueItemDB() (*sql.DB, error) {
-	db, err := sql.Open("sqlite", ":memory:")
-	if err != nil {
-		return nil, err
-	}
-
-	createTable := `
+	crtCatalogueItemTbl = `
 	CREATE TABLE catalogueitem (
 		catalogueID varchar(255) NOT NULL,
 		catalogueitemID int4 NOT NULL,
@@ -71,8 +42,10 @@ func setupTestCatalogueItemDB() (*sql.DB, error) {
 		pricingType pricingTypeEnum,
 		CONSTRAINT catalogueitem_pk PRIMARY KEY (catalogueID, catalogueitemID)
 	);`
+)
 
-	_, err = db.Exec(createTable)
+func setupTestDBInstance() (*sql.DB, error) {
+	db, err := sql.Open("sqlite", ":memory:")
 	if err != nil {
 		return nil, err
 	}
