@@ -23,9 +23,9 @@ const (
 	crtCustomerOrderTbl = `
 	CREATE TABLE customerorder (
 		orderID INTEGER PRIMARY KEY,
-		cellnumber TEXT NOT NULL,
-		catalogueID TEXT NOT NULL,
-		orderitems TEXT NOT NULL,
+		cellnumber varchar(15) NOT NULL,
+		catalogueID varchar(30) NOT NULL,
+		orderitems varchar(255) NOT NULL,
 		orderTotal INTEGER DEFAULT 0,
 		ispaid BOOLEAN DEFAULT 0,
 		datetimedelivered DATETIME,
@@ -35,10 +35,10 @@ const (
 	crtCatalogueItemTbl = `
 	CREATE TABLE catalogueitem (
 		catalogueID varchar(255) NOT NULL,
-		catalogueitemID int4 NOT NULL,
+		catalogueitemID INTEGER NOT NULL,
 		"selection" varchar(255) NULL,
 		"item" varchar(255) NULL,
-		"options" _text NULL,
+		"options" varchar(255) NULL,
 		pricingType pricingTypeEnum,
 		CONSTRAINT catalogueitem_pk PRIMARY KEY (catalogueID, catalogueitemID)
 	);`
