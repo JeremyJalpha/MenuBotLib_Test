@@ -3,7 +3,6 @@ package menubotlib_test
 import (
 	"database/sql"
 	"encoding/json"
-	"log"
 	"reflect"
 	"testing"
 
@@ -171,19 +170,13 @@ func Test_CheckoutNow(t *testing.T) {
 	defer db.Close()
 
 	_, err = db.Exec(crtCustomerOrderTbl)
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	_, err = db.Exec(crtCatalogueItemTbl)
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	err = insertCatalogueItems(db, selections)
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	senderNum := "0000000000"
 	pymntRtrnBase := "payment_return"
