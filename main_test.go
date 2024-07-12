@@ -172,12 +172,6 @@ func Test_CheckoutNow(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	_, err = db.Exec(crtCatalogueItemTbl)
-	assert.NoError(t, err)
-
-	err = insertCatalogueItems(db, catalogueID, selections)
-	assert.NoError(t, err)
-
 	senderNum := "0000000000"
 	pymntRtrnBase := "payment_return"
 	pymntCnclBase := "payment_canceled"
@@ -212,7 +206,7 @@ func Test_CheckoutNow(t *testing.T) {
 		expectError    bool
 	}{
 		{
-			ctlgSelections: []mb.CatalogueSelection{},
+			ctlgSelections: selections,
 			userInfo: mb.UserInfo{
 				CellNumber: senderNum,
 				NickName:   mb.NullString{NullString: sql.NullString{String: "testSplurge", Valid: true}},
@@ -256,4 +250,19 @@ func Test_CheckoutNow(t *testing.T) {
 		// 	t.Errorf("UpdateOrInsertCurrentOrder(%q) = %v, want %v", test.custOrd.OrderItems, result, test.expected)
 		// }
 	}
+}
+
+func Test_PrintPriceList(t *testing.T) {
+	db, err := setupTestDBInstance()
+	assert.NoError(t, err)
+	defer db.Close()
+
+	_, err = db.Exec(crtCatalogueItemTbl)
+	assert.NoError(t, err)
+
+	err = insertCatalogueItems(db, catalogueID, selections)
+	assert.NoError(t, err)
+
+	err = queryAndPrintCatalogueItems(db)
+	assert.NoError(t, err)
 }
