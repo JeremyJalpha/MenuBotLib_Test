@@ -164,6 +164,18 @@ func Test_NewOrder_UpdateOrInsertCurrentOrder(t *testing.T) {
 }
 
 func Test_CheckoutNow(t *testing.T) {
+
+	// // Usage
+	// db, err := setupTestCatalogueItemDB()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// err = insertCatalogueItems(db, myCatalogueSelections)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
 	db, err := setupTestCustOrderDB()
 	assert.NoError(t, err)
 	defer db.Close()

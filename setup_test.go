@@ -2,6 +2,8 @@ package menubotlib_test
 
 import (
 	"database/sql"
+	"fmt"
+	"strings"
 
 	mb "github.com/JeremyJalpha/MenuBotLib"
 	_ "modernc.org/sqlite"
@@ -43,6 +45,14 @@ func setupTestCustOrderDB() (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func addTableToDBContext(db *sql.DB, tableName string, createTableSQL string) error {
+	_, err := db.Exec(createTableSQL)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func setupTestCatalogueItemDB() (*sql.DB, error) {
@@ -206,4 +216,22 @@ var selections = []mb.CatalogueSelection{
 	DIYSelection,
 	TechSelection,
 	EdiblesSelection,
+}
+
+func insertCatalogueItems(db *sql.DB, selections []mb.CatalogueSelection) error {
+	insertStmt := `
+	INSERT INTO catalogueitem (catalogueID, catalogueitemID, "selection", "item", "options", pricingType)
+	VALUES (?, ?, ?, ?, ?, ?);`
+
+	for _, selection := range selections {
+		for _, item := range selection.Items {
+			options := fmt.Sprintf("{%s}", strings.Join(item.Options, ", "))
+			_, err := db.Exec(insertStmt, "pig", item.CatalogueItemID, selection.Preamble, item.Item, options, item.PricingType)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
