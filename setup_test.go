@@ -47,7 +47,7 @@ func setupTestCustOrderDB() (*sql.DB, error) {
 	return db, nil
 }
 
-func addTableToDBContext(db *sql.DB, tableName string, createTableSQL string) error {
+func addTableToDBContext(db *sql.DB, createTableSQL string) error {
 	_, err := db.Exec(createTableSQL)
 	if err != nil {
 		return err
