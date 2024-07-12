@@ -22,7 +22,6 @@ func AssembleCatalogueSelections(pricelistpreamble string, ctlgselections []Cata
 	selectionString := pricelistpreamble + "\n\n"
 
 	for i, selection := range ctlgselections {
-		// Outdoor Selection
 		selectionString += selection.CatalogueSelectionAsAString()
 		if i < len(ctlgselections)-1 {
 			selectionString += "\n"
