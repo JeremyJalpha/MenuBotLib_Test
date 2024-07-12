@@ -175,7 +175,7 @@ func Test_CheckoutNow(t *testing.T) {
 	_, err = db.Exec(crtCatalogueItemTbl)
 	assert.NoError(t, err)
 
-	err = insertCatalogueItems(db, selections)
+	err = insertCatalogueItems(db, catalogueID, selections)
 	assert.NoError(t, err)
 
 	senderNum := "0000000000"
