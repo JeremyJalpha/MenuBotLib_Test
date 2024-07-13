@@ -3,7 +3,6 @@ package menubotlib_test
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"reflect"
 	"testing"
 
@@ -267,5 +266,8 @@ func Test_PrintPriceList(t *testing.T) {
 
 	ctlgItms, err := getCatalogueItemsFromDB(db, catalogueID)
 	assert.NoError(t, err)
-	fmt.Print(ctlgItms)
+
+	if !reflect.DeepEqual(ctlgItms, selections) {
+		t.Errorf("insertCatalogueItems(db, %s...) = %v, want %v", catalogueID, ctlgItms, selections)
+	}
 }
