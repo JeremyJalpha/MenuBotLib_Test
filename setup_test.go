@@ -209,20 +209,19 @@ func insertCatalogueItems(db *sql.DB, ctlgid string, selections []mb.CatalogueSe
 	return nil
 }
 
-func queryCatalogueItemsToString(db *sql.DB) (string, error) {
+func getCatalogueItemsFromDB(db *sql.DB, catalogueid string) ([]mb.CatalogueItem, error) {
 	query := `
 	SELECT catalogueID, catalogueitemID, "selection", "item", "options", pricingType
-	FROM catalogueitem;`
+	FROM catalogueitem
+	WHERE catalogueID = $1;`
 
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, catalogueid)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer rows.Close()
 
-	var resultBuilder strings.Builder
-	resultBuilder.WriteString("Catalogue Items:\n")
-	resultBuilder.WriteString("--------------------------------------------------\n")
+	var rtnItems []mb.CatalogueItem
 
 	for rows.Next() {
 		var item mb.CatalogueItem
@@ -230,20 +229,17 @@ func queryCatalogueItemsToString(db *sql.DB) (string, error) {
 
 		err := rows.Scan(&item.CatalogueID, &item.CatalogueItemID, &item.Selection, &item.Item, &optionsStr, &item.PricingType)
 		if err != nil {
-			return "", err
+			item = mb.CatalogueItem{}
 		}
 
 		item.Options = strings.Split(optionsStr, ", ")
 
-		// Build the formatted string
-		resultBuilder.WriteString(fmt.Sprintf("Catalogue ID: %s, Item ID: %d, Selection: %s, Item: %s, Options: %v, Pricing Type: %s\n",
-			item.CatalogueID, item.CatalogueItemID, item.Selection, item.Item, item.Options, item.PricingType))
-		resultBuilder.WriteString("--------------------------------------------------\n")
+		rtnItems = append(rtnItems, item)
 	}
 
 	if err := rows.Err(); err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return resultBuilder.String(), nil
+	return rtnItems, nil
 }

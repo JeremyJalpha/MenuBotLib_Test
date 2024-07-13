@@ -265,7 +265,7 @@ func Test_PrintPriceList(t *testing.T) {
 	err = insertCatalogueItems(db, catalogueID, selections)
 	assert.NoError(t, err)
 
-	ctlgItms, err := queryCatalogueItemsToString(db)
+	ctlgItms, err := getCatalogueItemsFromDB(db, catalogueID)
 	assert.NoError(t, err)
 	fmt.Print(ctlgItms)
 }
