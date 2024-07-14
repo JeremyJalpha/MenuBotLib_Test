@@ -277,3 +277,24 @@ func Test_PrintPriceList(t *testing.T) {
 		t.Errorf("getCatalogueItemsFromDB(db, %s...) = %v, want %v", catalogueID, ctlgItms, expectedItems)
 	}
 }
+
+func Test_ComposedCatalogueSelections(t *testing.T) {
+	db, err := setupTestDBInstance()
+	assert.NoError(t, err)
+	defer db.Close()
+
+	_, err = db.Exec(crtCatalogueItemTbl)
+	assert.NoError(t, err)
+
+	err = mb.InsertCatalogueItems(db, selections)
+	assert.NoError(t, err)
+
+	ctlgItms, err := mb.GetCatalogueItemsFromDB(db, catalogueID)
+	assert.NoError(t, err)
+
+	convertedctlgItms := mb.CmpsCtlgSlctnsFromCtlgItms(ctlgItms)
+
+	if !reflect.DeepEqual(convertedctlgItms, selections) {
+		t.Errorf("getCatalogueItemsFromDB(db, %s...) = %v, want %v", catalogueID, ctlgItms, selections)
+	}
+}
