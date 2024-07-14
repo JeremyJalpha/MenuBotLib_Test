@@ -156,7 +156,7 @@ var TechSelection = mb.CatalogueSelection{
 			CatalogueItemID: 8,
 			Selection:       tchSlctnPreamble,
 			Item:            "Macless Apple @ R100 each",
-			Options:         []string{},
+			Options:         nil,
 			PricingType:     mb.SingleItem,
 		},
 		{
@@ -164,7 +164,7 @@ var TechSelection = mb.CatalogueSelection{
 			CatalogueItemID: 9,
 			Selection:       tchSlctnPreamble,
 			Item:            "Unchargeable cellphone @ R150 each",
-			Options:         []string{},
+			Options:         nil,
 			PricingType:     mb.SingleItem,
 		},
 	},
@@ -257,6 +257,8 @@ func getCatalogueItemsFromDB(db *sql.DB, catalogueid string) ([]mb.CatalogueItem
 
 		if optionsStr != "" {
 			item.Options = strings.Split(optionsStr, ", ")
+		} else {
+			item.Options = nil
 		}
 
 		rtnItems = append(rtnItems, item)
