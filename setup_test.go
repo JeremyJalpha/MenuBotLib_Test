@@ -255,7 +255,9 @@ func getCatalogueItemsFromDB(db *sql.DB, catalogueid string) ([]mb.CatalogueItem
 			item = mb.CatalogueItem{}
 		}
 
-		item.Options = strings.Split(optionsStr, ", ")
+		if optionsStr != "" {
+			item.Options = strings.Split(optionsStr, ", ")
+		}
 
 		rtnItems = append(rtnItems, item)
 	}
