@@ -56,7 +56,9 @@ var GardeningSelection = mb.CatalogueSelection{
 	Preamble: grdngSlctnPreamble,
 	Items: []mb.CatalogueItem{
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 1,
+			Selection:       grdngSlctnPreamble,
 			Item:            "Denitrified fertilizer",
 			Options: []string{
 				"5g @ R110 p.g.",
@@ -65,7 +67,9 @@ var GardeningSelection = mb.CatalogueSelection{
 			PricingType: mb.WeightItem,
 		},
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 2,
+			Selection:       grdngSlctnPreamble,
 			Item:            "Dehydrogenated water",
 			Options: []string{
 				"5g @ R140 p.g.",
@@ -74,7 +78,9 @@ var GardeningSelection = mb.CatalogueSelection{
 			PricingType: mb.WeightItem,
 		},
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 3,
+			Selection:       grdngSlctnPreamble,
 			Item:            "Decarbonized soil",
 			Options: []string{
 				"5g @ R150 p.g.",
@@ -89,8 +95,10 @@ var KitchenSelection = mb.CatalogueSelection{
 	Preamble: ktcnSlctnPreamble,
 	Items: []mb.CatalogueItem{
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 4,
 			Item:            "DIY ready cake mix",
+			Selection:       ktcnSlctnPreamble,
 			Options: []string{
 				"5g @ R180 p.g.",
 				"10g @ R160 p.g.",
@@ -98,7 +106,9 @@ var KitchenSelection = mb.CatalogueSelection{
 			PricingType: mb.WeightItem,
 		},
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 5,
+			Selection:       ktcnSlctnPreamble,
 			Item:            "Sugarless Sugar",
 			Options: []string{
 				"5g @ R210 p.g.",
@@ -107,7 +117,9 @@ var KitchenSelection = mb.CatalogueSelection{
 			PricingType: mb.WeightItem,
 		},
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 6,
+			Selection:       ktcnSlctnPreamble,
 			Item:            "Burnt bread crumbs",
 			Options: []string{
 				"5g @ R250 p.g.",
@@ -122,7 +134,9 @@ var DIYSelection = mb.CatalogueSelection{
 	Preamble: diySlctnPreamble,
 	Items: []mb.CatalogueItem{
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 7,
+			Selection:       diySlctnPreamble,
 			Item:            "Bristleless Broom",
 			Options: []string{
 				"Vacuumless roomba version @ R650",
@@ -138,13 +152,17 @@ var TechSelection = mb.CatalogueSelection{
 	Preamble: tchSlctnPreamble,
 	Items: []mb.CatalogueItem{
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 8,
+			Selection:       tchSlctnPreamble,
 			Item:            "Macless Apple @ R100 each",
 			Options:         []string{},
 			PricingType:     mb.SingleItem,
 		},
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 9,
+			Selection:       tchSlctnPreamble,
 			Item:            "Unchargeable cellphone @ R150 each",
 			Options:         []string{},
 			PricingType:     mb.SingleItem,
@@ -156,7 +174,9 @@ var EdiblesSelection = mb.CatalogueSelection{
 	Preamble: edblsSlctnPreamble,
 	Items: []mb.CatalogueItem{
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 10,
+			Selection:       edblsSlctnPreamble,
 			Item:            "Fruit toffees - 400mg",
 			Options: []string{
 				"10-Pack @ R200",
@@ -164,7 +184,9 @@ var EdiblesSelection = mb.CatalogueSelection{
 			PricingType: mb.SingleItem,
 		},
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 11,
+			Selection:       edblsSlctnPreamble,
 			Item:            "Sour space strips - 400mg",
 			Options: []string{
 				"10-Pack @ R180",
@@ -172,7 +194,9 @@ var EdiblesSelection = mb.CatalogueSelection{
 			PricingType: mb.SingleItem,
 		},
 		{
+			CatalogueID:     catalogueID,
 			CatalogueItemID: 12,
+			Selection:       edblsSlctnPreamble,
 			Item:            "Space bud treats - 240mg",
 			Options: []string{
 				"3-Pack @ R200",

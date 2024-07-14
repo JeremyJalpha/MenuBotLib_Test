@@ -246,11 +246,15 @@ func Test_CheckoutNow(t *testing.T) {
 		// 	t.Errorf("UpdateOrInsertCurrentOrder(%q) error = %v, expectError %v", test.custOrd.OrderItems, err, test.expectError)
 		// 	continue
 		// }
-		// result := wb.OrderItems{MenuIndications: actual.MenuIndications}
-		// if !reflect.DeepEqual(result, test.expected) {
-		// 	t.Errorf("UpdateOrInsertCurrentOrder(%q) = %v, want %v", test.custOrd.OrderItems, result, test.expected)
-		// }
 	}
+}
+
+func extractItemsFromSelections(selections []mb.CatalogueSelection) []mb.CatalogueItem {
+	var items []mb.CatalogueItem
+	for _, selection := range selections {
+		items = append(items, selection.Items...)
+	}
+	return items
 }
 
 func Test_PrintPriceList(t *testing.T) {
@@ -264,10 +268,12 @@ func Test_PrintPriceList(t *testing.T) {
 	err = insertCatalogueItems(db, catalogueID, selections)
 	assert.NoError(t, err)
 
+	expectedItems := extractItemsFromSelections(selections)
+
 	ctlgItms, err := getCatalogueItemsFromDB(db, catalogueID)
 	assert.NoError(t, err)
 
-	if !reflect.DeepEqual(ctlgItms, selections) {
-		t.Errorf("getCatalogueItemsFromDB(db, %s...) = %v, want %v", catalogueID, ctlgItms, selections)
+	if !reflect.DeepEqual(ctlgItms, expectedItems) {
+		t.Errorf("getCatalogueItemsFromDB(db, %s...) = %v, want %v", catalogueID, ctlgItms, expectedItems)
 	}
 }
