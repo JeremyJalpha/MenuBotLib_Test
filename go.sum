@@ -2,6 +2,8 @@ github.com/JeremyJalpha/MenuBotLib v0.0.0-20240704121625-21acef588b83 h1:/S3/M/y
 github.com/JeremyJalpha/MenuBotLib v0.0.0-20240704121625-21acef588b83/go.mod h1:oCVPI1Ho7AspWuDTCPdTt3S7EKxO1J7D3kfeRNaCG0o=
 github.com/JeremyJalpha/MenuBotLib v0.0.0-20240707163354-35718e5863a0 h1:wu3W47WyS+nVQ0yfg0aZ/+WfOc9qakzfcMXoxaVfK9g=
 github.com/JeremyJalpha/MenuBotLib v0.0.0-20240707163354-35718e5863a0/go.mod h1:oCVPI1Ho7AspWuDTCPdTt3S7EKxO1J7D3kfeRNaCG0o=
+github.com/JeremyJalpha/MenuBotLib v1.0.5 h1:O1z3Hhhy8K/OrrIRFF9sXFMRfECh8T4lQiHXbtojgXw=
+github.com/JeremyJalpha/MenuBotLib v1.0.5/go.mod h1:oCVPI1Ho7AspWuDTCPdTt3S7EKxO1J7D3kfeRNaCG0o=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=

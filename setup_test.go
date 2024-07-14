@@ -2,7 +2,6 @@ package menubotlib_test
 
 import (
 	"database/sql"
-	"strings"
 
 	mb "github.com/JeremyJalpha/MenuBotLib"
 	_ "modernc.org/sqlite"
@@ -212,61 +211,4 @@ var selections = []mb.CatalogueSelection{
 	DIYSelection,
 	TechSelection,
 	EdiblesSelection,
-}
-
-func insertCatalogueItems(db *sql.DB, selections []mb.CatalogueSelection) error {
-	insertStmt := `
-	INSERT INTO catalogueitem (catalogueID, catalogueitemID, "selection", "item", "options", pricingType)
-	VALUES (?, ?, ?, ?, ?, ?);`
-
-	for _, selection := range selections {
-		for _, item := range selection.Items {
-			options := strings.Join(item.Options, ", ")
-			_, err := db.Exec(insertStmt, item.CatalogueID, item.CatalogueItemID, selection.Preamble, item.Item, options, item.PricingType)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
-}
-
-func getCatalogueItemsFromDB(db *sql.DB, catalogueid string) ([]mb.CatalogueItem, error) {
-	query := `
-	SELECT catalogueID, catalogueitemID, "selection", "item", "options", pricingType
-	FROM catalogueitem
-	WHERE catalogueID = $1;`
-
-	rows, err := db.Query(query, catalogueid)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var rtnItems []mb.CatalogueItem
-
-	for rows.Next() {
-		var item mb.CatalogueItem
-		var optionsStr string
-
-		err := rows.Scan(&item.CatalogueID, &item.CatalogueItemID, &item.Selection, &item.Item, &optionsStr, &item.PricingType)
-		if err != nil {
-			item = mb.CatalogueItem{}
-		}
-
-		if optionsStr != "" {
-			item.Options = strings.Split(optionsStr, ", ")
-		} else {
-			item.Options = nil
-		}
-
-		rtnItems = append(rtnItems, item)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return rtnItems, nil
 }

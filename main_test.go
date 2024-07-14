@@ -265,12 +265,12 @@ func Test_PrintPriceList(t *testing.T) {
 	_, err = db.Exec(crtCatalogueItemTbl)
 	assert.NoError(t, err)
 
-	err = insertCatalogueItems(db, selections)
+	err = mb.InsertCatalogueItems(db, selections)
 	assert.NoError(t, err)
 
 	expectedItems := extractItemsFromSelections(selections)
 
-	ctlgItms, err := getCatalogueItemsFromDB(db, catalogueID)
+	ctlgItms, err := mb.GetCatalogueItemsFromDB(db, catalogueID)
 	assert.NoError(t, err)
 
 	if !reflect.DeepEqual(ctlgItms, expectedItems) {
