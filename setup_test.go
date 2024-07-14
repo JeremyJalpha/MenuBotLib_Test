@@ -2,7 +2,6 @@ package menubotlib_test
 
 import (
 	"database/sql"
-	"fmt"
 	"strings"
 
 	mb "github.com/JeremyJalpha/MenuBotLib"
@@ -198,7 +197,7 @@ func insertCatalogueItems(db *sql.DB, ctlgid string, selections []mb.CatalogueSe
 
 	for _, selection := range selections {
 		for _, item := range selection.Items {
-			options := fmt.Sprintf("%s", strings.Join(item.Options, ", "))
+			options := strings.Join(item.Options, ", ")
 			_, err := db.Exec(insertStmt, ctlgid, item.CatalogueItemID, selection.Preamble, item.Item, options, item.PricingType)
 			if err != nil {
 				return err
