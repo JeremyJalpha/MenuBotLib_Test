@@ -214,7 +214,7 @@ var selections = []mb.CatalogueSelection{
 	EdiblesSelection,
 }
 
-func insertCatalogueItems(db *sql.DB, ctlgid string, selections []mb.CatalogueSelection) error {
+func insertCatalogueItems(db *sql.DB, selections []mb.CatalogueSelection) error {
 	insertStmt := `
 	INSERT INTO catalogueitem (catalogueID, catalogueitemID, "selection", "item", "options", pricingType)
 	VALUES (?, ?, ?, ?, ?, ?);`
@@ -222,7 +222,7 @@ func insertCatalogueItems(db *sql.DB, ctlgid string, selections []mb.CatalogueSe
 	for _, selection := range selections {
 		for _, item := range selection.Items {
 			options := strings.Join(item.Options, ", ")
-			_, err := db.Exec(insertStmt, ctlgid, item.CatalogueItemID, selection.Preamble, item.Item, options, item.PricingType)
+			_, err := db.Exec(insertStmt, item.CatalogueID, item.CatalogueItemID, selection.Preamble, item.Item, options, item.PricingType)
 			if err != nil {
 				return err
 			}

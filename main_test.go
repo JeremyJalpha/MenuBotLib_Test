@@ -265,7 +265,7 @@ func Test_PrintPriceList(t *testing.T) {
 	_, err = db.Exec(crtCatalogueItemTbl)
 	assert.NoError(t, err)
 
-	err = insertCatalogueItems(db, catalogueID, selections)
+	err = insertCatalogueItems(db, selections)
 	assert.NoError(t, err)
 
 	expectedItems := extractItemsFromSelections(selections)
