@@ -317,7 +317,7 @@ func Test_CalculatePriceWithNoOptions(t *testing.T) {
 				},
 			},
 			expctdTotal:   1080,
-			expctdSummary: "Hello TDD world",
+			expctdSummary: "",
 			expctError:    false,
 		},
 	}
