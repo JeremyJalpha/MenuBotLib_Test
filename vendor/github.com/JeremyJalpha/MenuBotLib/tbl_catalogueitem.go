@@ -86,8 +86,9 @@ func GetCatalogueItemsFromDB(db *sql.DB, catalogueid string) ([]CatalogueItem, e
 		err = json.Unmarshal([]byte(optionsStr), &options)
 		if err != nil {
 			item.Options = nil
+		} else {
+			item.Options = options
 		}
-		item.Options = options
 
 		rtnItems = append(rtnItems, item)
 	}
