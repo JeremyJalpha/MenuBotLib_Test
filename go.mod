@@ -26,5 +26,5 @@ require (
 require (
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/stretchr/testify v1.9.0
-	modernc.org/sqlite v1.30.1
+	modernc.org/sqlite v1.30.2
 )
