@@ -47,8 +47,7 @@ func Test_ParseUpdateOrderCommand(t *testing.T) {
 	}
 }
 
-// func (c *CustomerOrder) updateCustOrdItems(update OrderItems) error {
-// baseline := "Update order 9:12, 10: 1x3, 3x2, 2x1, 6: 5"
+// baseline: "Update order 9:12, 10: 1x3, 3x2, 2x1, 6: 5"
 func Test_UpdateCustOrdItems(t *testing.T) {
 	var err error
 
@@ -296,5 +295,35 @@ func Test_ComposedCatalogueSelections(t *testing.T) {
 
 	if !reflect.DeepEqual(convertedctlgItms, selections) {
 		t.Errorf("getCatalogueItemsFromDB(db, %s...) = %v, want %v", catalogueID, ctlgItms, selections)
+	}
+}
+
+func Test_CalculatePriceWithNoOptions(t *testing.T) {
+	tests := []struct {
+		ordItems      mb.OrderItems
+		expctdTotal   int
+		expctdSummary string
+		expctError    bool
+	}{
+		{
+			ordItems: mb.OrderItems{
+				MenuIndications: []mb.MenuIndication{
+					{ItemMenuNum: 1, ItemAmount: "12"},
+				},
+			},
+			expctdTotal:   112,
+			expctdSummary: "Hello TDD world",
+			expctError:    false,
+		},
+	}
+
+	for _, test := range tests {
+		total, summary := test.ordItems.CalculatePrice(selections)
+		if summary != test.expctdSummary {
+			t.Errorf("CalculatePrice(selections).summary = %v, want %v", summary, test.expctdSummary)
+		}
+		if total != test.expctdTotal {
+			t.Errorf("CalculatePrice(selections).total = %v, want %v", total, test.expctdTotal)
+		}
 	}
 }
