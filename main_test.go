@@ -299,6 +299,11 @@ func Test_ComposedCatalogueSelections(t *testing.T) {
 }
 
 func Test_CalculatePriceWithNoOptions(t *testing.T) {
+	// Static Menu definition should say:
+	// Denitrified fertilizer:
+	//  - "5g @ R110 p.g.",
+	//  - "10g @ R90 p.g.",
+	// Therefore Expected Total: 12 * 90 = 1080
 	tests := []struct {
 		ordItems      mb.OrderItems
 		expctdTotal   int
@@ -311,7 +316,7 @@ func Test_CalculatePriceWithNoOptions(t *testing.T) {
 					{ItemMenuNum: 1, ItemAmount: "12"},
 				},
 			},
-			expctdTotal:   112,
+			expctdTotal:   1080,
 			expctdSummary: "Hello TDD world",
 			expctError:    false,
 		},
